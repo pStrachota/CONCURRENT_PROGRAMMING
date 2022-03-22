@@ -4,9 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CSHARP_PW_PROJECT.View"
-        mc:Ignorable="d"
-        Title="Window1" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        mc:Ignorable="d" FontFamily="Segoe UI light" FontSize="25"
+        Title="CircleView" Height="450" Width="800" WindowState="Maximized">
+    <StackPanel>
+
+        <Label>Podaj liczbę kulek</Label>
+        <TextBox Name="textbox" ></TextBox>
+        <Button Background="#FF88F143" >Utwórz kulki</Button>
+        <Button Background="#FF5FD9E2" >Przesuń kulki ręcznie</Button>
+        <Button Background="#FFDC7AD0" >Automatyczny ruch kulek</Button>
+        <Button Background="#FFDAC21F">Zatrzymaj ruch kulek</Button>
+        <Button Background="#FFF10909">Usuń kulki</Button>
+      
+    </StackPanel>
 </Window>
