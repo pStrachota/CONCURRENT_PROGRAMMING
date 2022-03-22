@@ -14,6 +14,10 @@ namespace CSHARP_PW_PROJECT.ViewModel
 {
     internal class CircleViewModel
     {
+        /// <summary>
+        /// our main 'automatic logic' lies here
+        /// dispatherTimer is used for invoking 
+        /// </summary>
         readonly DispatcherTimer gameTimer = new();
         public ObservableCollection<Circle> circleList { get; private set; }
         private string circleNumber = "";
@@ -29,6 +33,13 @@ namespace CSHARP_PW_PROJECT.ViewModel
                 _createCirclesCommand.InvokeCanExecuteChanged();
             }
         }
+
+        //ONE BIG THING TO NOTICE
+        //in this code we have many methods that uses InvokeCanExecuteChanged()
+        //they are placed in every situation when we want to inform our gui
+        //that specific action happened - thanks to that, gui buttons can
+        //react accordingly
+
         private readonly List<string> colorList = new();
 
         private readonly CircleCommands _createCirclesCommand;
@@ -40,11 +51,14 @@ namespace CSHARP_PW_PROJECT.ViewModel
         private readonly CircleCommands _moveCirclesAutomaticallyCommand;
 
         private readonly CircleCommands _stopCirclesCommand;
+
+        //ICommand just uses particular CircleCommands in order to 
+        //make some actions
+        //ICommands are binded in CircleView.xaml
         public ICommand CreateCirclesCommand => _createCirclesCommand;
         public ICommand MoveCirclesManuallyCommand => _moveCirclesManuallyCommand;
         public ICommand MoveCirclesAutomaticallyCommand => _moveCirclesAutomaticallyCommand;
         public ICommand DeleteCirclesCommand => _deleteCirclesCommand;
-
         public ICommand StopCirclesCommand => _stopCirclesCommand;
 
         public CircleViewModel()
@@ -57,7 +71,9 @@ namespace CSHARP_PW_PROJECT.ViewModel
             colorList.Add("Orange");
             colorList.Add("Green");
             colorList.Add("Pink");
-        
+
+            // initialize CircleCommand with specific 'On' and 'Can' Commands
+
             _createCirclesCommand = new CircleCommands(OnCreateCirclesCommand, CanCreateCirclesCommand);
             _moveCirclesManuallyCommand = new CircleCommands(OnMoveCirclesManuallyCommand, CanMoveCirclesCommand);
             _moveCirclesAutomaticallyCommand = new CircleCommands(OnMoveCirclesAutomaticallyCommand, CanMoveCirclesCommand);
@@ -67,6 +83,13 @@ namespace CSHARP_PW_PROJECT.ViewModel
             circleList = new ObservableCollection<Circle> { };
 
         }
+
+        /// <summary>
+        /// Every function, that starts with 'Can', is used 
+        /// for check if condition that must be met to enable above action is true
+        /// </summary>
+        /// <param name="commandParameter"> is not used, but has be here (function<obj, bool>)</param>
+        /// <returns></returns>
         private bool CanCreateCirclesCommand(object commandParameter)
         {
             string pattern = @"^[0-9]*[1-9][0-9]*$";
@@ -116,6 +139,11 @@ namespace CSHARP_PW_PROJECT.ViewModel
             _moveCirclesAutomaticallyCommand.InvokeCanExecuteChanged();
         }
 
+        /// <summary>
+        /// function below can be improved
+        /// now all our circles are created in one specific position
+        /// becouse of that, circles cannot 'escape' from screen
+        /// </summary>
         private void OnMoveCirclesBase()
         {
             Random random = new();
