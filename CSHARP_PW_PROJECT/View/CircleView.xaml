@@ -11,7 +11,7 @@
         <Label>Podaj liczbę kulek</Label>
         <TextBox Text="{Binding Path=CircleNumber, UpdateSourceTrigger=PropertyChanged}" Name="textbox" ></TextBox>
         <Button Command="{Binding Path=CreateCirclesCommand}" Background="#FF88F143" >Utwórz kulki</Button>
-        <Button Background="#FF5FD9E2" >Przesuń kulki ręcznie</Button>
+        <Button Command="{Binding Path=MoveCirclesManuallyCommand}" Background="#FF5FD9E2" >Przesuń kulki ręcznie</Button>
         <Button Background="#FFDC7AD0" >Automatyczny ruch kulek</Button>
         <Button Background="#FFDAC21F">Zatrzymaj ruch kulek</Button>
         <Button Background="#FFF10909">Usuń kulki</Button>
