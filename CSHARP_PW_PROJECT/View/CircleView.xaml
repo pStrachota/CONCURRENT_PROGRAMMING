@@ -9,12 +9,32 @@
     <StackPanel>
 
         <Label>Podaj liczbę kulek</Label>
-        <TextBox Name="textbox" ></TextBox>
-        <Button Background="#FF88F143" >Utwórz kulki</Button>
+        <TextBox Text="{Binding Path=CircleNumber, UpdateSourceTrigger=PropertyChanged}" Name="textbox" ></TextBox>
+        <Button Command="{Binding Path=CreateCirclesCommand}" Background="#FF88F143" >Utwórz kulki</Button>
         <Button Background="#FF5FD9E2" >Przesuń kulki ręcznie</Button>
         <Button Background="#FFDC7AD0" >Automatyczny ruch kulek</Button>
         <Button Background="#FFDAC21F">Zatrzymaj ruch kulek</Button>
         <Button Background="#FFF10909">Usuń kulki</Button>
-      
+        <ItemsControl ItemsSource="{Binding circleList}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="Canvas.Left" Value="{Binding leftPosition}"/>
+                    <Setter Property="Canvas.Top" Value="{Binding topPosition}"/>
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Ellipse Height="{Binding height}" 
+                             Width="{Binding wide}"
+                            Fill="{Binding color}" RenderTransform="{Binding RenderTransform}"></Ellipse>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
     </StackPanel>
 </Window>
