@@ -14,7 +14,7 @@
         <Button Command="{Binding Path=MoveCirclesManuallyCommand}" Background="#FF5FD9E2" >Przesuń kulki ręcznie</Button>
         <Button Background="#FFDC7AD0" >Automatyczny ruch kulek</Button>
         <Button Background="#FFDAC21F">Zatrzymaj ruch kulek</Button>
-        <Button Background="#FFF10909">Usuń kulki</Button>
+        <Button Command="{Binding Path=DeleteCirclesCommand}" Background="#FFF10909">Usuń kulki</Button>
         <ItemsControl ItemsSource="{Binding circleList}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

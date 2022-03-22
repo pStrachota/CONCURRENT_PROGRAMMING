@@ -32,8 +32,12 @@ namespace CSHARP_PW_PROJECT.ViewModel
         private readonly CircleCommands _createCirclesCommand;
 
         private readonly CircleCommands _moveCirclesManuallyCommand;
+
+        private readonly CircleCommands _deleteCirclesCommand;
         public ICommand CreateCirclesCommand => _createCirclesCommand;
         public ICommand MoveCirclesManuallyCommand => _moveCirclesManuallyCommand;
+
+        public ICommand DeleteCirclesCommand => _deleteCirclesCommand;
 
         public CircleViewModel()
         {
@@ -48,6 +52,7 @@ namespace CSHARP_PW_PROJECT.ViewModel
         
             _createCirclesCommand = new CircleCommands(OnCreateCirclesCommand, CanCreateCirclesCommand);
             _moveCirclesManuallyCommand = new CircleCommands(OnMoveCirclesManuallyCommand, CanMoveCirclesCommand);
+            _deleteCirclesCommand = new CircleCommands(OnDeleteCirclesCommand, CanDeleteCirclesCommand);
             circleList = new ObservableCollection<Circle> { };
 
         }
@@ -60,6 +65,18 @@ namespace CSHARP_PW_PROJECT.ViewModel
         private bool CanMoveCirclesCommand(object commandParameter)
         {
             return circleList.Count > 0;
+        }
+
+        private bool CanDeleteCirclesCommand(object commandParameter)
+        {
+            return circleList.Count > 0;
+        }
+
+        private void OnDeleteCirclesCommand(object obj)
+        {
+            this.circleList.Clear();
+            _deleteCirclesCommand.InvokeCanExecuteChanged();
+            _moveCirclesManuallyCommand.InvokeCanExecuteChanged();
         }
 
         private void OnMoveCirclesManuallyCommand(object obj)
@@ -113,6 +130,7 @@ namespace CSHARP_PW_PROJECT.ViewModel
                 circleList.Add(circle);
 
                 _moveCirclesManuallyCommand.InvokeCanExecuteChanged();
+                _deleteCirclesCommand.InvokeCanExecuteChanged();
             }
         }
     }
