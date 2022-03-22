@@ -8,11 +8,13 @@ using System.Text.RegularExpressions;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 
 namespace CSHARP_PW_PROJECT.ViewModel
 {
     internal class CircleViewModel
     {
+        readonly DispatcherTimer gameTimer = new();
         public ObservableCollection<Circle> circleList { get; private set; }
         private string circleNumber = "";
         public string CircleNumber
@@ -34,10 +36,16 @@ namespace CSHARP_PW_PROJECT.ViewModel
         private readonly CircleCommands _moveCirclesManuallyCommand;
 
         private readonly CircleCommands _deleteCirclesCommand;
+
+        private readonly CircleCommands _moveCirclesAutomaticallyCommand;
+
+        private readonly CircleCommands _stopCirclesCommand;
         public ICommand CreateCirclesCommand => _createCirclesCommand;
         public ICommand MoveCirclesManuallyCommand => _moveCirclesManuallyCommand;
-
+        public ICommand MoveCirclesAutomaticallyCommand => _moveCirclesAutomaticallyCommand;
         public ICommand DeleteCirclesCommand => _deleteCirclesCommand;
+
+        public ICommand StopCirclesCommand => _stopCirclesCommand;
 
         public CircleViewModel()
         {
@@ -52,7 +60,10 @@ namespace CSHARP_PW_PROJECT.ViewModel
         
             _createCirclesCommand = new CircleCommands(OnCreateCirclesCommand, CanCreateCirclesCommand);
             _moveCirclesManuallyCommand = new CircleCommands(OnMoveCirclesManuallyCommand, CanMoveCirclesCommand);
+            _moveCirclesAutomaticallyCommand = new CircleCommands(OnMoveCirclesAutomaticallyCommand, CanMoveCirclesCommand);
             _deleteCirclesCommand = new CircleCommands(OnDeleteCirclesCommand, CanDeleteCirclesCommand);
+            _stopCirclesCommand = new CircleCommands(OnStopCirclesCommand, CanStopCirclesCommand);
+
             circleList = new ObservableCollection<Circle> { };
 
         }
@@ -64,12 +75,17 @@ namespace CSHARP_PW_PROJECT.ViewModel
 
         private bool CanMoveCirclesCommand(object commandParameter)
         {
-            return circleList.Count > 0;
+            return circleList.Count > 0 && !gameTimer.IsEnabled;
         }
 
         private bool CanDeleteCirclesCommand(object commandParameter)
         {
-            return circleList.Count > 0;
+            return !gameTimer.IsEnabled && circleList.Count > 0;
+        }
+
+        private bool CanStopCirclesCommand(object commandParameter)
+        {
+            return gameTimer.IsEnabled;
         }
 
         private void OnDeleteCirclesCommand(object obj)
@@ -77,18 +93,41 @@ namespace CSHARP_PW_PROJECT.ViewModel
             this.circleList.Clear();
             _deleteCirclesCommand.InvokeCanExecuteChanged();
             _moveCirclesManuallyCommand.InvokeCanExecuteChanged();
+            _moveCirclesAutomaticallyCommand.InvokeCanExecuteChanged();
         }
 
-        private void OnMoveCirclesManuallyCommand(object obj)
+        private void OnMoveCirclesAutomaticallyCommand(object obj)
+        {
+            gameTimer.Tick += GameTimerEvent;
+            gameTimer.Interval = TimeSpan.FromSeconds(1);
+            gameTimer.Start();
+            _moveCirclesManuallyCommand.InvokeCanExecuteChanged();
+            _deleteCirclesCommand.InvokeCanExecuteChanged();
+            _stopCirclesCommand.InvokeCanExecuteChanged();
+            _moveCirclesAutomaticallyCommand.InvokeCanExecuteChanged();
+        }
+
+        private void OnStopCirclesCommand(object obj)
+        {
+            gameTimer.Stop();
+            _stopCirclesCommand.InvokeCanExecuteChanged();
+            _deleteCirclesCommand.InvokeCanExecuteChanged();
+            _moveCirclesManuallyCommand.InvokeCanExecuteChanged();
+            _moveCirclesAutomaticallyCommand.InvokeCanExecuteChanged();
+        }
+
+        private void OnMoveCirclesBase()
         {
             Random random = new();
             int circlesCount = int.Parse(circleNumber);
 
             for (int i = 0; i < circlesCount; i++)
             {
+                //hardcoded values for screen width and height
                 int toMoveHorizontal = random.Next(40, 700);
                 int toMoveVertical = random.Next(40, 450);
 
+                //which side is for changing directions when moving horizontal
                 int whichSide = random.Next(0, 200);
 
                 if (whichSide > 100)
@@ -108,6 +147,15 @@ namespace CSHARP_PW_PROJECT.ViewModel
                 circleList.ElementAt(i).topPosition = toMoveVertical;
                 circleList.ElementAt(i).leftPosition = toMoveHorizontal;
             }
+        }
+
+        private void GameTimerEvent(object sender, EventArgs e)
+        {
+            this.OnMoveCirclesBase();
+        }
+        private void OnMoveCirclesManuallyCommand(object obj)
+        {
+            this.OnMoveCirclesBase();
         }
         private void OnCreateCirclesCommand(object obj)
         {
@@ -131,6 +179,7 @@ namespace CSHARP_PW_PROJECT.ViewModel
 
                 _moveCirclesManuallyCommand.InvokeCanExecuteChanged();
                 _deleteCirclesCommand.InvokeCanExecuteChanged();
+                _moveCirclesAutomaticallyCommand.InvokeCanExecuteChanged();
             }
         }
     }
