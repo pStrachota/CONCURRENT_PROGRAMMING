@@ -12,7 +12,7 @@ using System.Windows.Threading;
 
 namespace CSHARP_PW_PROJECT.ViewModel
 {
-    internal class CircleViewModel
+    public class CircleViewModel
     {
         /// <summary>
         /// our main 'automatic logic' lies here
