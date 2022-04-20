@@ -9,7 +9,7 @@ public abstract class BusinessLogicAbstractApi
         return new BusinessLogic(data == null ? DataLayerAbstractApi.CreateLinq2Sql() : data);
     }
     
-    public abstract void moveBall(BllCircle bllCircle);
+    public abstract void moveBllCircle(BllCircle bllCircle);
 
     public abstract BllCircle CreateBllCircle(int width, int height);
     
@@ -20,7 +20,7 @@ public abstract class BusinessLogicAbstractApi
             MyDataLayer = dataLayerAPI;
         }
         private readonly DataLayerAbstractApi MyDataLayer;
-        public override void moveBall(BllCircle bllCircle)
+        public override void moveBllCircle(BllCircle bllCircle)
         {
             Random random = new();
             int toMoveHorizontal = random.Next(10, 800);

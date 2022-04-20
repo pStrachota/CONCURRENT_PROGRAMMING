@@ -48,7 +48,7 @@ public abstract class ModelLayerAbstractApi
         public override void moveCircles(ModelCircle modelCircle, double circlesSpeed)
         {
             BllCircle bllCircle = readCircleData(modelCircle);
-            _businessLogicAbstractApi.moveBall(bllCircle);
+            _businessLogicAbstractApi.moveBllCircle(bllCircle);
             readBallData(bllCircle, modelCircle);
             
             DoubleAnimation anim1 = new(modelCircle.lastTopPosition, modelCircle.topPosition, TimeSpan.FromSeconds(circlesSpeed));
