@@ -21,7 +21,7 @@ namespace CSHARP_PW_PROJECT.ViewModel
         /// dispatherTimer is used for invoking 
         /// </summary>
         readonly DispatcherTimer _gameTimer = new();
-        public ObservableCollection<Circle> circleList { get; private set; }
+        public ObservableCollection<ModelCircle> circleList { get; private set; }
         private string _circleNumber = "";
         private string _circleWidth = "";
         private string _circleHeight = "";
@@ -104,7 +104,7 @@ namespace CSHARP_PW_PROJECT.ViewModel
             StopCirclesCommand = new RelayCommand(OnStopCirclesCommand, CanStopCirclesCommand);
             ResetValuesCommand = new RelayCommand(OnResetValuesCommand, CanResetValuesCommand);
             _gameTimer.Tick += GameTimerEvent;
-            circleList = new ObservableCollection<Circle> { };
+            circleList = new ObservableCollection<ModelCircle> { };
 
         }
 
@@ -240,16 +240,16 @@ namespace CSHARP_PW_PROJECT.ViewModel
             {
                 int whichColor = random.Next(0, 8);
 
-                Circle circle = new();
+                ModelCircle modelCircle = new();
 
-                circle.leftPosition = 750;
-                circle.topPosition = 0;
-                circle.wide = circlesWidth;
-                circle.height = circlesHeight;
-                circle.RenderTransform = new TranslateTransform();
-                circle.color = colorList.ElementAt(whichColor);
+                modelCircle.leftPosition = 750;
+                modelCircle.topPosition = 0;
+                modelCircle.wide = circlesWidth;
+                modelCircle.height = circlesHeight;
+                modelCircle.RenderTransform = new TranslateTransform();
+                modelCircle.color = colorList.ElementAt(whichColor);
 
-                circleList.Add(circle);
+                circleList.Add(modelCircle);
 
                 DeleteCirclesCommand.NotifyCanExecuteChanged();
                 MoveCirclesManuallyCommand.NotifyCanExecuteChanged();

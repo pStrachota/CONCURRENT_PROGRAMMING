@@ -16,13 +16,13 @@ public class BllCircle
         this.topPosition = toMoveVertical;
     }
 
-    private int height { get; set; }
-    private int wide { get; set; }
-    private string color { get; set; }
-    private int startingLeftPosition { get; set; }
-    private int startingTopPosition { get; set; }
-    private int lastLeftPosition { get; set; }
-    private int lastTopPosition { get; set; }
-    private int leftPosition { get; set; }
-    private int topPosition { get; set; }
+    public int height { get; set; }
+    public int wide { get; set; }
+    public string color { get; set; }
+    public int startingLeftPosition { get; set; }
+    public int startingTopPosition { get; set; }
+    public int lastLeftPosition { get; set; }
+    public int lastTopPosition { get; set; }
+    public int leftPosition { get; set; }
+    public int topPosition { get; set; }
 }
