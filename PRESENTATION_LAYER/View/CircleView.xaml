@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" FontFamily="Segoe UI light" FontSize="25"
-        Title="CircleView" Height="750" Width="1550" WindowState="Maximized">
+        Title="CONCURRENT PROGRAMMING PROJECT" Height="750" Width="1550" WindowState="Maximized">
     <Canvas Margin="0,0,0,-62" DataContext="{Binding CircleViewModel, Source={StaticResource Locator}}">
         <Canvas.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">

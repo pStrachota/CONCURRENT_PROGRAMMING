@@ -5,10 +5,16 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <RootNamespace>CSHARP_PW_PROJECT</RootNamespace>
+    <ApplicationIcon>grape_fruit_food_icon_218370.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="View\Biale-drewno-2.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="grape_fruit_food_icon_218370.ico" />
   </ItemGroup>
 
   <ItemGroup>
