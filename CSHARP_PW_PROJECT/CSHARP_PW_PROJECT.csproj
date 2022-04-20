@@ -7,4 +7,12 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="View\Biale-drewno-2.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="View\Biale-drewno-2.jpg" />
+  </ItemGroup>
+
 </Project>
