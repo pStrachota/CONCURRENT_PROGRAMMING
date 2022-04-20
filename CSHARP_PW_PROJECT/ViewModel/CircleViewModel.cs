@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
@@ -9,31 +10,71 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.Input;
+using GalaSoft.MvvmLight;
 
 namespace CSHARP_PW_PROJECT.ViewModel
 {
-    public class CircleViewModel
+    public class CircleViewModel : ViewModelBase
     {
         /// <summary>
         /// our main 'automatic logic' lies here
         /// dispatherTimer is used for invoking 
         /// </summary>
-        readonly DispatcherTimer gameTimer = new();
+        readonly DispatcherTimer _gameTimer = new();
         public ObservableCollection<Circle> circleList { get; private set; }
-        private string circleNumber = "";
+        private string _circleNumber = "";
+        private string _circleWidth = "";
+        private string _circleHeight = "";
+        private string _circleSpeed = "";
         public string CircleNumber
         {
             get
             {
-                return circleNumber;
+                return _circleNumber;
             }
             set
             {
-                circleNumber = value;
+                _circleNumber = value;
                 CreateCirclesCommand.NotifyCanExecuteChanged();
+                ResetValuesCommand.NotifyCanExecuteChanged();
+                RaisePropertyChanged("CircleNumber");
             }
         }
-
+        public string CircleWidth
+        {
+            get => _circleWidth;
+            set
+            {
+                _circleWidth = value;
+                CreateCirclesCommand.NotifyCanExecuteChanged();
+                ResetValuesCommand.NotifyCanExecuteChanged();
+                RaisePropertyChanged("CircleWidth");
+            }
+        }
+        public string CircleHeight
+        {
+            get => _circleHeight;
+            set
+            {
+                _circleHeight = value;
+                CreateCirclesCommand.NotifyCanExecuteChanged();
+                ResetValuesCommand.NotifyCanExecuteChanged();
+                RaisePropertyChanged("CircleHeight");
+            }
+        }
+        
+        public string CircleSpeed
+        {
+            get => _circleSpeed;
+            set
+            {
+                _circleSpeed = value;
+                CreateCirclesCommand.NotifyCanExecuteChanged();
+                ResetValuesCommand.NotifyCanExecuteChanged();
+                RaisePropertyChanged("CircleSpeed");
+            }
+        }
+        
         private readonly List<string> colorList = new();
         
         public RelayCommand CreateCirclesCommand { get; private set; }
@@ -41,6 +82,7 @@ namespace CSHARP_PW_PROJECT.ViewModel
         public RelayCommand MoveCirclesAutomaticallyCommand { get; private set; }
         public RelayCommand DeleteCirclesCommand { get; private set; }
         public RelayCommand StopCirclesCommand { get; private set; }
+        public RelayCommand ResetValuesCommand { get; private set; }
 
         public CircleViewModel()
         {
@@ -60,7 +102,8 @@ namespace CSHARP_PW_PROJECT.ViewModel
             MoveCirclesAutomaticallyCommand = new RelayCommand(OnMoveCirclesAutomaticallyCommand, CanMoveCirclesCommand);
             DeleteCirclesCommand = new RelayCommand(OnDeleteCirclesCommand, CanDeleteCirclesCommand);
             StopCirclesCommand = new RelayCommand(OnStopCirclesCommand, CanStopCirclesCommand);
-
+            ResetValuesCommand = new RelayCommand(OnResetValuesCommand, CanResetValuesCommand);
+            _gameTimer.Tick += GameTimerEvent;
             circleList = new ObservableCollection<Circle> { };
 
         }
@@ -74,24 +117,36 @@ namespace CSHARP_PW_PROJECT.ViewModel
         private bool CanCreateCirclesCommand()
         {
             string pattern = @"^[0-9]*[1-9][0-9]*$";
-            return new Regex(pattern).IsMatch(circleNumber);
+            string pattern2 = "^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$";
+            
+            return new Regex(pattern).IsMatch(_circleNumber) && new Regex(pattern).IsMatch(_circleWidth)
+                                                             && new Regex(pattern).IsMatch(_circleHeight)
+                                                             && new Regex(pattern2).IsMatch(_circleSpeed);
         }
 
         private bool CanMoveCirclesCommand()
         {
-            return circleList.Count > 0 && !gameTimer.IsEnabled;
+            return circleList.Count > 0 && !_gameTimer.IsEnabled;
         }
 
         private bool CanDeleteCirclesCommand()
         {
-            return !gameTimer.IsEnabled && circleList.Count > 0;
+            return !_gameTimer.IsEnabled && circleList.Count > 0;
         }
 
         private bool CanStopCirclesCommand()
         {
-            return gameTimer.IsEnabled;
+            return _gameTimer.IsEnabled;
         }
 
+        private void OnResetValuesCommand()
+        {
+            CircleNumber = "";
+            CircleWidth = "";
+            CircleHeight = "";
+            CircleSpeed = "";
+        }
+        
         private void OnDeleteCirclesCommand()
         {
             this.circleList.Clear();
@@ -99,12 +154,17 @@ namespace CSHARP_PW_PROJECT.ViewModel
             MoveCirclesManuallyCommand.NotifyCanExecuteChanged();
             MoveCirclesAutomaticallyCommand.NotifyCanExecuteChanged();
         }
+        
+        private bool CanResetValuesCommand()
+        {
+            return !_gameTimer.IsEnabled && (CircleNumber != "" || CircleWidth != "" || CircleHeight != "" || CircleSpeed != "");
+        }
 
         private void OnMoveCirclesAutomaticallyCommand()
         {
-            gameTimer.Tick += GameTimerEvent;
-            gameTimer.Interval = TimeSpan.FromSeconds(1);
-            gameTimer.Start();
+            _gameTimer.Tick += GameTimerEvent;
+            _gameTimer.Interval = TimeSpan.FromSeconds(1);
+            _gameTimer.Start();
             
             DeleteCirclesCommand.NotifyCanExecuteChanged();
             MoveCirclesManuallyCommand.NotifyCanExecuteChanged();
@@ -114,7 +174,7 @@ namespace CSHARP_PW_PROJECT.ViewModel
 
         private void OnStopCirclesCommand()
         {
-            gameTimer.Stop();
+            _gameTimer.Stop();
             DeleteCirclesCommand.NotifyCanExecuteChanged();
             MoveCirclesManuallyCommand.NotifyCanExecuteChanged();
             MoveCirclesAutomaticallyCommand.NotifyCanExecuteChanged();
@@ -129,8 +189,10 @@ namespace CSHARP_PW_PROJECT.ViewModel
         private void OnMoveCirclesBase()
         {
             Random random = new();
-            int circlesCount = int.Parse(circleNumber);
+            int circlesCount = int.Parse(_circleNumber);
+            double circlesSpeed = double.Parse(_circleSpeed, CultureInfo.InvariantCulture);
 
+            
             for (int i = 0; i < circlesCount; i++)
             {
                 //hardcoded values for screen width and height
@@ -148,8 +210,8 @@ namespace CSHARP_PW_PROJECT.ViewModel
                 int top = circleList.ElementAt(i).topPosition;
                 int left = circleList.ElementAt(i).leftPosition;
 
-                DoubleAnimation anim1 = new(top, toMoveVertical, TimeSpan.FromSeconds(1));
-                DoubleAnimation anim2 = new(left, toMoveHorizontal, TimeSpan.FromSeconds(1));
+                DoubleAnimation anim1 = new(top, toMoveVertical, TimeSpan.FromSeconds(circlesSpeed));
+                DoubleAnimation anim2 = new(left, toMoveHorizontal, TimeSpan.FromSeconds(circlesSpeed));
 
                 circleList.ElementAt(i).RenderTransform.BeginAnimation(TranslateTransform.XProperty, anim2);
                 circleList.ElementAt(i).RenderTransform.BeginAnimation(TranslateTransform.YProperty, anim1);
@@ -170,7 +232,9 @@ namespace CSHARP_PW_PROJECT.ViewModel
         private void OnCreateCirclesCommand()
         {
             Random random = new();
-            int circlesCount = int.Parse(circleNumber);
+            int circlesCount = int.Parse(_circleNumber);
+            int circlesWidth = int.Parse(_circleWidth);
+            int circlesHeight = int.Parse(_circleHeight);
 
             for (int i = 0; i < circlesCount; i++)
             {
@@ -180,8 +244,8 @@ namespace CSHARP_PW_PROJECT.ViewModel
 
                 circle.leftPosition = 750;
                 circle.topPosition = 0;
-                circle.wide = 50;
-                circle.height = 50;
+                circle.wide = circlesWidth;
+                circle.height = circlesHeight;
                 circle.RenderTransform = new TranslateTransform();
                 circle.color = colorList.ElementAt(whichColor);
 
