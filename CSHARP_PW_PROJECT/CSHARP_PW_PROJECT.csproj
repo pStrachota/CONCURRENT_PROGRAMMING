@@ -15,4 +15,10 @@
     <Resource Include="View\Biale-drewno-2.jpg" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CommonServiceLocator" Version="2.0.6" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0-preview3" />
+    <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
+  </ItemGroup>
+
 </Project>

@@ -1,5 +1,4 @@
-﻿using CSHARP_PW_PROJECT.Commands;
-using CSHARP_PW_PROJECT.Model;
+﻿using CSHARP_PW_PROJECT.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using CommunityToolkit.Mvvm.Input;
 
 namespace CSHARP_PW_PROJECT.ViewModel
 {
@@ -30,36 +30,17 @@ namespace CSHARP_PW_PROJECT.ViewModel
             set
             {
                 circleNumber = value;
-                _createCirclesCommand.InvokeCanExecuteChanged();
+                CreateCirclesCommand.NotifyCanExecuteChanged();
             }
         }
 
-        //ONE BIG THING TO NOTICE
-        //in this code we have many methods that uses InvokeCanExecuteChanged()
-        //they are placed in every situation when we want to inform our gui
-        //that specific action happened - thanks to that, gui buttons can
-        //react accordingly
-
         private readonly List<string> colorList = new();
-
-        private readonly CircleCommands _createCirclesCommand;
-
-        private readonly CircleCommands _moveCirclesManuallyCommand;
-
-        private readonly CircleCommands _deleteCirclesCommand;
-
-        private readonly CircleCommands _moveCirclesAutomaticallyCommand;
-
-        private readonly CircleCommands _stopCirclesCommand;
-
-        //ICommand just uses particular CircleCommands in order to 
-        //make some actions
-        //ICommands are binded in CircleView.xaml
-        public ICommand CreateCirclesCommand => _createCirclesCommand;
-        public ICommand MoveCirclesManuallyCommand => _moveCirclesManuallyCommand;
-        public ICommand MoveCirclesAutomaticallyCommand => _moveCirclesAutomaticallyCommand;
-        public ICommand DeleteCirclesCommand => _deleteCirclesCommand;
-        public ICommand StopCirclesCommand => _stopCirclesCommand;
+        
+        public RelayCommand CreateCirclesCommand { get; private set; }
+        public RelayCommand MoveCirclesManuallyCommand { get; private set; }
+        public RelayCommand MoveCirclesAutomaticallyCommand { get; private set; }
+        public RelayCommand DeleteCirclesCommand { get; private set; }
+        public RelayCommand StopCirclesCommand { get; private set; }
 
         public CircleViewModel()
         {
@@ -74,11 +55,11 @@ namespace CSHARP_PW_PROJECT.ViewModel
 
             // initialize CircleCommand with specific 'On' and 'Can' Commands
 
-            _createCirclesCommand = new CircleCommands(OnCreateCirclesCommand, CanCreateCirclesCommand);
-            _moveCirclesManuallyCommand = new CircleCommands(OnMoveCirclesManuallyCommand, CanMoveCirclesCommand);
-            _moveCirclesAutomaticallyCommand = new CircleCommands(OnMoveCirclesAutomaticallyCommand, CanMoveCirclesCommand);
-            _deleteCirclesCommand = new CircleCommands(OnDeleteCirclesCommand, CanDeleteCirclesCommand);
-            _stopCirclesCommand = new CircleCommands(OnStopCirclesCommand, CanStopCirclesCommand);
+            CreateCirclesCommand = new RelayCommand(OnCreateCirclesCommand, CanCreateCirclesCommand);
+            MoveCirclesManuallyCommand = new RelayCommand(OnMoveCirclesManuallyCommand, CanMoveCirclesCommand);
+            MoveCirclesAutomaticallyCommand = new RelayCommand(OnMoveCirclesAutomaticallyCommand, CanMoveCirclesCommand);
+            DeleteCirclesCommand = new RelayCommand(OnDeleteCirclesCommand, CanDeleteCirclesCommand);
+            StopCirclesCommand = new RelayCommand(OnStopCirclesCommand, CanStopCirclesCommand);
 
             circleList = new ObservableCollection<Circle> { };
 
@@ -90,53 +71,54 @@ namespace CSHARP_PW_PROJECT.ViewModel
         /// </summary>
         /// <param name="commandParameter"> is not used, but has be here (function<obj, bool>)</param>
         /// <returns></returns>
-        private bool CanCreateCirclesCommand(object commandParameter)
+        private bool CanCreateCirclesCommand()
         {
             string pattern = @"^[0-9]*[1-9][0-9]*$";
             return new Regex(pattern).IsMatch(circleNumber);
         }
 
-        private bool CanMoveCirclesCommand(object commandParameter)
+        private bool CanMoveCirclesCommand()
         {
             return circleList.Count > 0 && !gameTimer.IsEnabled;
         }
 
-        private bool CanDeleteCirclesCommand(object commandParameter)
+        private bool CanDeleteCirclesCommand()
         {
             return !gameTimer.IsEnabled && circleList.Count > 0;
         }
 
-        private bool CanStopCirclesCommand(object commandParameter)
+        private bool CanStopCirclesCommand()
         {
             return gameTimer.IsEnabled;
         }
 
-        private void OnDeleteCirclesCommand(object obj)
+        private void OnDeleteCirclesCommand()
         {
             this.circleList.Clear();
-            _deleteCirclesCommand.InvokeCanExecuteChanged();
-            _moveCirclesManuallyCommand.InvokeCanExecuteChanged();
-            _moveCirclesAutomaticallyCommand.InvokeCanExecuteChanged();
+            DeleteCirclesCommand.NotifyCanExecuteChanged();
+            MoveCirclesManuallyCommand.NotifyCanExecuteChanged();
+            MoveCirclesAutomaticallyCommand.NotifyCanExecuteChanged();
         }
 
-        private void OnMoveCirclesAutomaticallyCommand(object obj)
+        private void OnMoveCirclesAutomaticallyCommand()
         {
             gameTimer.Tick += GameTimerEvent;
             gameTimer.Interval = TimeSpan.FromSeconds(1);
             gameTimer.Start();
-            _moveCirclesManuallyCommand.InvokeCanExecuteChanged();
-            _deleteCirclesCommand.InvokeCanExecuteChanged();
-            _stopCirclesCommand.InvokeCanExecuteChanged();
-            _moveCirclesAutomaticallyCommand.InvokeCanExecuteChanged();
+            
+            DeleteCirclesCommand.NotifyCanExecuteChanged();
+            MoveCirclesManuallyCommand.NotifyCanExecuteChanged();
+            MoveCirclesAutomaticallyCommand.NotifyCanExecuteChanged();
+            StopCirclesCommand.NotifyCanExecuteChanged();
         }
 
-        private void OnStopCirclesCommand(object obj)
+        private void OnStopCirclesCommand()
         {
             gameTimer.Stop();
-            _stopCirclesCommand.InvokeCanExecuteChanged();
-            _deleteCirclesCommand.InvokeCanExecuteChanged();
-            _moveCirclesManuallyCommand.InvokeCanExecuteChanged();
-            _moveCirclesAutomaticallyCommand.InvokeCanExecuteChanged();
+            DeleteCirclesCommand.NotifyCanExecuteChanged();
+            MoveCirclesManuallyCommand.NotifyCanExecuteChanged();
+            MoveCirclesAutomaticallyCommand.NotifyCanExecuteChanged();
+            StopCirclesCommand.NotifyCanExecuteChanged();
         }
 
         /// <summary>
@@ -181,11 +163,11 @@ namespace CSHARP_PW_PROJECT.ViewModel
         {
             this.OnMoveCirclesBase();
         }
-        private void OnMoveCirclesManuallyCommand(object obj)
+        private void OnMoveCirclesManuallyCommand()
         {
             this.OnMoveCirclesBase();
         }
-        private void OnCreateCirclesCommand(object obj)
+        private void OnCreateCirclesCommand()
         {
             Random random = new();
             int circlesCount = int.Parse(circleNumber);
@@ -205,9 +187,9 @@ namespace CSHARP_PW_PROJECT.ViewModel
 
                 circleList.Add(circle);
 
-                _moveCirclesManuallyCommand.InvokeCanExecuteChanged();
-                _deleteCirclesCommand.InvokeCanExecuteChanged();
-                _moveCirclesAutomaticallyCommand.InvokeCanExecuteChanged();
+                DeleteCirclesCommand.NotifyCanExecuteChanged();
+                MoveCirclesManuallyCommand.NotifyCanExecuteChanged();
+                MoveCirclesAutomaticallyCommand.NotifyCanExecuteChanged();
             }
         }
     }
