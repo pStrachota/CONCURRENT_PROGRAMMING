@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSHARP_PW_PROJECT", "CSHARP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSHARP_PW_PROJECT_TESTS", "CSHARP_PW_PROJECT_TESTS\CSHARP_PW_PROJECT_TESTS.csproj", "{A2CEC8E9-CA4A-4A0A-91AE-4599DCDC0AA6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DATA_LAYER", "DATA_LAYER\DATA_LAYER.csproj", "{D40737F8-4276-4524-A175-5DD56B33541D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A2CEC8E9-CA4A-4A0A-91AE-4599DCDC0AA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2CEC8E9-CA4A-4A0A-91AE-4599DCDC0AA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2CEC8E9-CA4A-4A0A-91AE-4599DCDC0AA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D40737F8-4276-4524-A175-5DD56B33541D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D40737F8-4276-4524-A175-5DD56B33541D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D40737F8-4276-4524-A175-5DD56B33541D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D40737F8-4276-4524-A175-5DD56B33541D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
