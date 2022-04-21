@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>CSHARP_PW_PROJECT</RootNamespace>
+    <ApplicationIcon>grape_fruit_food_icon_218370.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="View\Biale-drewno-2.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="grape_fruit_food_icon_218370.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="View\Biale-drewno-2.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommonServiceLocator" Version="2.0.6" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0-preview3" />
+    <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BUSINESS_LOGIC_LAYER\BUSINESS_LOGIC_LAYER.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
+
+    <RootNamespace>CSHARP_PW_PROJECT_TESTS</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CSHARP_PW_PROJECT\CSHARP_PW_PROJECT.csproj" />
+    <ProjectReference Include="..\PRESENTATION_LAYER\PRESENTATION_LAYER.csproj" />
   </ItemGroup>
 
 </Project>
