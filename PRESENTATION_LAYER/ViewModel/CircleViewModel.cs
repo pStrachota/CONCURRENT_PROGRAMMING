@@ -1,13 +1,9 @@
 ﻿using CSHARP_PW_PROJECT.Model;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.Input;
 using GalaSoft.MvvmLight;
@@ -16,26 +12,29 @@ namespace CSHARP_PW_PROJECT.ViewModel
 {
     public class CircleViewModel : ViewModelBase
     {
-        /// <summary>
-        /// our main 'automatic logic' lies here
-        /// dispatherTimer is used for invoking 
-        /// </summary>
-        readonly DispatcherTimer _gameTimer = new();
+        private DispatcherTimer _gameTimer = new();
 
-        public ObservableCollection<ModelCircle> circleList { get; private set; }
+        private ModelLayerAbstractApi _modelLayerAbstractApi;
+        public ObservableCollection<ModelCircle> CircleList { get; private set; }
+        
         private string _circleNumber = "";
         private string _circleWidth = "";
         private string _circleHeight = "";
         private string _circleSpeed = "";
+        
+        public RelayCommand CreateCirclesCommand { get; }
+        public RelayCommand MoveCirclesManuallyCommand { get; }
+        public RelayCommand MoveCirclesAutomaticallyCommand { get; }
+        public RelayCommand DeleteCirclesCommand { get; }
+        public RelayCommand StopCirclesCommand { get; }
 
         public string CircleNumber
         {
-            get { return _circleNumber; }
+            get => _circleNumber;
             set
             {
                 _circleNumber = value;
                 CreateCirclesCommand.NotifyCanExecuteChanged();
-                ResetValuesCommand.NotifyCanExecuteChanged();
                 RaisePropertyChanged("CircleNumber");
             }
         }
@@ -46,9 +45,8 @@ namespace CSHARP_PW_PROJECT.ViewModel
             set
             {
                 _circleWidth = value;
-                CreateCirclesCommand.NotifyCanExecuteChanged();
-                ResetValuesCommand.NotifyCanExecuteChanged();
-                RaisePropertyChanged("CircleWidth");
+                 CreateCirclesCommand.NotifyCanExecuteChanged();
+                 RaisePropertyChanged("CircleWidth");
             }
         }
 
@@ -58,9 +56,8 @@ namespace CSHARP_PW_PROJECT.ViewModel
             set
             {
                 _circleHeight = value;
-                CreateCirclesCommand.NotifyCanExecuteChanged();
-                ResetValuesCommand.NotifyCanExecuteChanged();
-                RaisePropertyChanged("CircleHeight");
+                 CreateCirclesCommand.NotifyCanExecuteChanged();
+                 RaisePropertyChanged("CircleHeight");
             }
         }
 
@@ -70,34 +67,24 @@ namespace CSHARP_PW_PROJECT.ViewModel
             set
             {
                 _circleSpeed = value;
-                CreateCirclesCommand.NotifyCanExecuteChanged();
-                ResetValuesCommand.NotifyCanExecuteChanged();
-                RaisePropertyChanged("CircleSpeed");
+                 CreateCirclesCommand.NotifyCanExecuteChanged();
+                 RaisePropertyChanged("CircleSpeed");
             }
         }
-
-
-        private ModelLayerAbstractApi _modelLayerAbstractApi;
-
-        public RelayCommand CreateCirclesCommand { get; private set; }
-        public RelayCommand MoveCirclesManuallyCommand { get; private set; }
-        public RelayCommand MoveCirclesAutomaticallyCommand { get; private set; }
-        public RelayCommand DeleteCirclesCommand { get; private set; }
-        public RelayCommand StopCirclesCommand { get; private set; }
-        public RelayCommand ResetValuesCommand { get; private set; }
+        
+        
 
         public CircleViewModel()
         {
-            _modelLayerAbstractApi = ModelLayerAbstractApi.CreateAPI();
+            _modelLayerAbstractApi = ModelLayerAbstractApi.CreateApi();
             CreateCirclesCommand = new RelayCommand(OnCreateCirclesCommand, CanCreateCirclesCommand);
             MoveCirclesManuallyCommand = new RelayCommand(OnMoveCirclesManuallyCommand, CanMoveCirclesCommand);
             MoveCirclesAutomaticallyCommand =
                 new RelayCommand(OnMoveCirclesAutomaticallyCommand, CanMoveCirclesCommand);
             DeleteCirclesCommand = new RelayCommand(OnDeleteCirclesCommand, CanDeleteCirclesCommand);
             StopCirclesCommand = new RelayCommand(OnStopCirclesCommand, CanStopCirclesCommand);
-            ResetValuesCommand = new RelayCommand(OnResetValuesCommand, CanResetValuesCommand);
             _gameTimer.Tick += GameTimerEvent;
-            circleList = new ObservableCollection<ModelCircle> { };
+            CircleList = new ObservableCollection<ModelCircle>();
         }
 
         private bool CanCreateCirclesCommand()
@@ -112,12 +99,12 @@ namespace CSHARP_PW_PROJECT.ViewModel
 
         private bool CanMoveCirclesCommand()
         {
-            return circleList.Count > 0 && !_gameTimer.IsEnabled;
+            return CircleList.Count > 0 && !_gameTimer.IsEnabled;
         }
 
         private bool CanDeleteCirclesCommand()
         {
-            return !_gameTimer.IsEnabled && circleList.Count > 0;
+            return !_gameTimer.IsEnabled && CircleList.Count > 0;
         }
 
         private bool CanStopCirclesCommand()
@@ -125,26 +112,12 @@ namespace CSHARP_PW_PROJECT.ViewModel
             return _gameTimer.IsEnabled;
         }
 
-        private void OnResetValuesCommand()
-        {
-            CircleNumber = "";
-            CircleWidth = "";
-            CircleHeight = "";
-            CircleSpeed = "";
-        }
-
         private void OnDeleteCirclesCommand()
         {
-            this.circleList.Clear();
+            CircleList.Clear();
             DeleteCirclesCommand.NotifyCanExecuteChanged();
             MoveCirclesManuallyCommand.NotifyCanExecuteChanged();
             MoveCirclesAutomaticallyCommand.NotifyCanExecuteChanged();
-        }
-
-        private bool CanResetValuesCommand()
-        {
-            return !_gameTimer.IsEnabled &&
-                   (CircleNumber != "" || CircleWidth != "" || CircleHeight != "" || CircleSpeed != "");
         }
 
         private void OnMoveCirclesAutomaticallyCommand()
@@ -166,7 +139,7 @@ namespace CSHARP_PW_PROJECT.ViewModel
             StopCirclesCommand.NotifyCanExecuteChanged();
         }
 
-        private void GameTimerEvent(object sender, EventArgs e)
+        private void GameTimerEvent(object? sender, EventArgs e)
         {
             int circlesCount = int.Parse(_circleNumber);
             double circlesSpeed = double.Parse(_circleSpeed, CultureInfo.InvariantCulture);
@@ -175,7 +148,7 @@ namespace CSHARP_PW_PROJECT.ViewModel
 
             for (int i = 0; i < circlesCount; i++)
             {
-                _modelLayerAbstractApi.moveCircles(circleList.ElementAt(i), circlesSpeed);
+                _modelLayerAbstractApi.MoveCircles(CircleList.ElementAt(i), circlesSpeed);
             }
         }
 
@@ -186,23 +159,22 @@ namespace CSHARP_PW_PROJECT.ViewModel
 
             for (int i = 0; i < circlesCount; i++)
             {
-                _modelLayerAbstractApi.moveCircles(circleList.ElementAt(i), circlesSpeed);
+                _modelLayerAbstractApi.MoveCircles(CircleList.ElementAt(i), circlesSpeed);
             }
         }
 
         private void OnCreateCirclesCommand()
         {
-            Random random = new();
             int circlesCount = int.Parse(_circleNumber);
             int circlesWidth = int.Parse(_circleWidth);
             int circlesHeight = int.Parse(_circleHeight);
 
             for (int i = 0; i < circlesCount; i++)
             {
-                circleList.Add(_modelLayerAbstractApi.CreateModelCircles(circlesWidth, circlesHeight));
+                CircleList.Add(_modelLayerAbstractApi.CreateModelCircles(circlesWidth, circlesHeight));
             }
 
-            _circleNumber = circleList.Count.ToString();
+            _circleNumber = CircleList.Count.ToString();
 
             DeleteCirclesCommand.NotifyCanExecuteChanged();
             MoveCirclesManuallyCommand.NotifyCanExecuteChanged();

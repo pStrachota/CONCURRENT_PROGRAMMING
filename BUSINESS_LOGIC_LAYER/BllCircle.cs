@@ -5,7 +5,7 @@ public class BllCircle
     public BllCircle(int wide, int height)
     {
         Random random = new();
-        int toMoveHorizontal = random.Next(55, 1414);
+        int toMoveHorizontal = random.Next(51, 1405);
         int toMoveVertical = random.Next(275, 770 - height + 4);
 
         this.wide = wide;

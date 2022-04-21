@@ -13,7 +13,7 @@ namespace CSHARP_PW_PROJECT_TESTS
         [TestMethod]
         public void CheckIf_CircleListIsNotNull_AfterCVMInitialization()
         {
-            Assert.IsNotNull(_circleViewModel.circleList);
+            Assert.IsNotNull(_circleViewModel.CircleList);
         }
 
         [TestMethod]
@@ -33,7 +33,7 @@ namespace CSHARP_PW_PROJECT_TESTS
 
             _circleViewModel.CreateCirclesCommand.Execute(null);
 
-            Assert.AreEqual(50, _circleViewModel.circleList.Count);
+            Assert.AreEqual(50, _circleViewModel.CircleList.Count);
         }
 
 
@@ -46,7 +46,7 @@ namespace CSHARP_PW_PROJECT_TESTS
             _circleViewModel.CircleSpeed = "0.2";
             
             _circleViewModel.CreateCirclesCommand.Execute(null);
-            ModelCircle circle = _circleViewModel.circleList.First();
+            ModelCircle circle = _circleViewModel.CircleList.First();
             int topPositionBeforeMove = circle.topPosition;
             int leftPositionBeforeMove = circle.leftPosition;
 
@@ -67,11 +67,11 @@ namespace CSHARP_PW_PROJECT_TESTS
 
             _circleViewModel.CreateCirclesCommand.Execute(null);
 
-            Assert.AreEqual(50, _circleViewModel.circleList.Count);
+            Assert.AreEqual(50, _circleViewModel.CircleList.Count);
 
             _circleViewModel.DeleteCirclesCommand.Execute(null);
 
-            Assert.AreEqual(0, _circleViewModel.circleList.Count);
+            Assert.AreEqual(0, _circleViewModel.CircleList.Count);
         }
 
         [TestMethod]
@@ -84,7 +84,7 @@ namespace CSHARP_PW_PROJECT_TESTS
 
             
             _circleViewModel.CreateCirclesCommand.Execute(null);
-            var circle = _circleViewModel.circleList.First();
+            var circle = _circleViewModel.CircleList.First();
             int topPositionBeforeMove = circle.lastTopPosition;
             int leftPositionBeforeMove = circle.lastLeftPosition;
 

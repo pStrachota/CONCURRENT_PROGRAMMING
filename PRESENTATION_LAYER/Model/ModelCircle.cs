@@ -8,7 +8,7 @@ namespace CSHARP_PW_PROJECT.Model
 {
     public class ModelCircle
     {
-        private readonly List<string> _colorList = new List<string>()
+        private readonly List<string?> _colorList = new List<string?>()
         {
             "Black",
             "Yellow",
@@ -39,13 +39,13 @@ namespace CSHARP_PW_PROJECT.Model
     
         public int height { get; set; }
         public int wide { get; set; }
-        public string color { get; set; }
+        public string? color { get; set; }
         public int startingLeftPosition { get; set; }
         public int startingTopPosition { get; set; }
         public int lastLeftPosition { get; set; }
         public int lastTopPosition { get; set; }
         public int leftPosition { get; set; }
         public int topPosition { get; set; }
-        public TranslateTransform RenderTransform { get; internal set; }
+        public TranslateTransform? RenderTransform { get; internal set; }
     }
 }
