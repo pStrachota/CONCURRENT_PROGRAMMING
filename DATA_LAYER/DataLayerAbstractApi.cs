@@ -4,19 +4,17 @@ namespace DATA_LAYER;
 
 public abstract class DataLayerAbstractApi
 {
-    public static string ConString = "SAMPLE_CONNECTION_STRING";
-    
-    public abstract DataTable? ReadCircleDetails();
-    public static DataLayerAbstractApi CreateLinq2Sql()
+    public abstract List<IDLCircle> GetDllCirclesFromBox(int numberOfBalls, int minRadius, int maxRadius, int speed);
+    public static DataLayerAbstractApi? CreateLinq2DLCircles()
     {
-        return new Linq2Sql();
+        return new Linq2DLCircles();
     }
 
-    private class Linq2Sql : DataLayerAbstractApi
+    private class Linq2DLCircles : DataLayerAbstractApi
     {
-        public override DataTable? ReadCircleDetails()
+        public override List<IDLCircle> GetDllCirclesFromBox(int numberOfBalls, int minRadius, int maxRadius, int speed)
         {
-            return null;
+            return new Box(numberOfBalls, minRadius, maxRadius, speed).GetDllCircles();
         }
     }
 }

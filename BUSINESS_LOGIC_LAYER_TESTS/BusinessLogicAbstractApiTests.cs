@@ -1,46 +1,69 @@
-using BUSINESS_LOGIC_LAYER;
+using Logic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
-namespace TestProject1;
-
-
-[TestClass]
-public class BusinessLogicAbstractApiTests
+namespace BUSINESS_LOGIC_TESTS
 {
-    private BusinessLogicAbstractApi _businessLogicAbstractApi;
-
-    [TestInitialize]
-    public void Initialize()
+    [TestClass]
+    public class BusinessLogicTests
     {
-        _businessLogicAbstractApi = BusinessLogicAbstractApi.CreateLayer();
-    }
-    
-    [TestMethod]
-    public void CheckIf_BusinessLogicImplementationIsNotNull_AfterBLLInitialization()
-    {
-        Assert.IsNotNull(_businessLogicAbstractApi);
-    }
 
-    [TestMethod]
-    public void CheckIf_BllCircleIsNotNull_AfterInitialization()
-    {
-        BllCircle bllCircle = _businessLogicAbstractApi.CreateBllCircle(50, 50);
-        
-        Assert.IsNotNull(bllCircle);
+        BusinessLogicAbstractApi _logicLayerAbstractAPI;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            _logicLayerAbstractAPI = BusinessLogicAbstractApi.CreateAPI();
+        }
+
+        [TestMethod]
+        public void CheckIf_LogicLayerIsNotNull_AfterInitialization()
+        {
+            Assert.IsNotNull(_logicLayerAbstractAPI);
+
+        }
+
+        [TestMethod]
+        public void CheckIf_BllCirclesIsNotNull_AfterInitialization()
+        {
+            Assert.IsNotNull(_logicLayerAbstractAPI.GetBllCircles());
+        }
+
+        [TestMethod]
+        public void CheckIf_SeparateBallsFromBox_AreNotEqual()
+        {
+            _logicLayerAbstractAPI.CreateBox(2, 20, 50, 20);
+            var ball = _logicLayerAbstractAPI.GetBllCircles().ElementAt(0);
+            var AnotherBall = _logicLayerAbstractAPI.GetBllCircles().ElementAt(1);
+
+            System.Console.WriteLine(ball.VelocityX);
+
+            Assert.IsNotNull(ball);
+            Assert.IsNotNull(AnotherBall);
+            Assert.AreNotEqual(ball, AnotherBall);
+
+            _logicLayerAbstractAPI.StartMovingBalls();
+
+            var ball2 = _logicLayerAbstractAPI.GetBllCircles().ElementAt(0);
+            System.Console.WriteLine(ball2.VelocityX);
+
+            _logicLayerAbstractAPI.BllCircleUpdate(ball2, 5000);
+
+            System.Console.WriteLine(ball2.VelocityX);
+
+        }
+        [TestMethod]
+        public void CheckIf_BallChangedPosition_AfterMoved()
+        {
+            _logicLayerAbstractAPI.CreateBox(1, 20, 50, 20);
+            var ball = _logicLayerAbstractAPI.GetBllCircles().ElementAt(0);
+            var ballY = ball.VelocityY;
+            var ballX = ball.VelocityX;
+
+            _logicLayerAbstractAPI.BllCircleUpdate(ball, 500);
+
+            Assert.AreNotEqual(ballY, ball.VelocityY);
+            Assert.AreNotEqual(ballX, ball.VelocityX);
+        }
     }
-    
-    [TestMethod]
-    public void CheckIf_BllCircleChangedPosition_AfterMoved()
-    {
-        BllCircle bllCircle = new BllCircle(50, 50);
-        int topPositionBeforeMove = bllCircle.topPosition;
-        int leftPositionBeforeMove = bllCircle.leftPosition;
-
-        _businessLogicAbstractApi.moveBllCircle(bllCircle);
-
-        Assert.IsNotNull(bllCircle);
-        Assert.AreNotEqual(topPositionBeforeMove, bllCircle.topPosition);
-        Assert.AreNotEqual(leftPositionBeforeMove, bllCircle.leftPosition);
-    }
-
 }
