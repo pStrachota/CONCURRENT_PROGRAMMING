@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-
+using System.Runtime.CompilerServices;
 
 namespace DATA_LAYER
 {
@@ -9,7 +9,7 @@ namespace DATA_LAYER
         int Y { get; }
         int R { get; }
         int Speed { get; }
-        void RaisePropertyChanged(string propertyName = null);
+        void RaisePropertyChanged(string propertyName);
 
     }
 }

@@ -48,30 +48,13 @@ namespace DATA_LAYER
         public int R
         {
             get => _r;
-            set
-            {
-                if (value > 0)
-                {
-                    _r = value;
-                }
-
-                else
-                {
-                    throw new ArgumentException();
-                }
-            }
         }
         public int Speed
         {
             get => _speed;
-            set
-            {
-                _speed = value;
-                RaisePropertyChanged(nameof(Speed));
-            }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public void RaisePropertyChanged(string propertyName)
         {

@@ -3,10 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+          xmlns:vm="clr-namespace:ViewModel;assembly=ViewModel"
         xmlns:local="clr-namespace:View"
         mc:Ignorable="d" FontFamily="Segoe UI light" FontSize="25"
         Title="CONCURRENT PROGRAMMING PROJECT" Height="750" Width="1550" WindowState="Maximized">
-    <Canvas Margin="0,0,0,-62" DataContext="{Binding CircleViewModel, Source={StaticResource Locator}}">
+    <Window.DataContext>
+        <vm:ViewModel/>
+    </Window.DataContext>
+    <Canvas Margin="0,0,0,-62">
         <Canvas.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                 <GradientStop Color="#FFDC66E3" Offset="0" />
@@ -23,7 +27,7 @@
                   " Header="Circle Movement Options" Width="397"
                   Canvas.Left="878" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Top="1">
             <Canvas>
-                <Button Name="StartButton" Command="{Binding Path=Start}" FontSize="20"
+                <Button Name="StartButton" Command="{Binding Path=StartCommand}" FontSize="20"
                         Content="Create and Move Circles" Canvas.Left="58" Canvas.Top="37" Height="35" Width="270"
                         HorizontalAlignment="Center" VerticalAlignment="Top">
                     <Button.Background>
@@ -33,7 +37,7 @@
                         </LinearGradientBrush>
                     </Button.Background>
                 </Button>
-                <Button Command="{Binding Path=Stop}" FontSize="20" Content="Stop Circles Movement"
+                <Button Command="{Binding Path=StopCommand}" FontSize="20" Content="Stop Circles Movement"
                         Canvas.Left="83" Canvas.Top="113" Height="35" Width="219" HorizontalAlignment="Center"
                         VerticalAlignment="Top">
                     <Button.Background>
@@ -78,7 +82,7 @@
         <GroupBox FontSize="25" Height="108" Header="Circles Remove" Width="192" Canvas.Top="119" Canvas.Left="1307"
                   HorizontalAlignment="Center" VerticalAlignment="Top">
             <Canvas>
-                <Button Command="{Binding Path=Delete}" FontSize="20" Content="Remove Circles"
+                <Button Command="{Binding Path=DeleteCommand}" FontSize="20" Content="Remove Circles"
                         Canvas.Top="14" Height="40" Width="158" HorizontalAlignment="Left" Canvas.Left="12"
                         VerticalAlignment="Center">
                     <Button.Background>
@@ -116,21 +120,13 @@
             </ItemsControl.ItemContainerStyle>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-
-                    <!-- 'X' w translateTransform mowi O ILE PRZESUNAC SIE NA OSI X-->
-                    <!-- 'Y' w translateTransform mowi O ILE PRZESUNAC SIE NA OSI Y-->
-                    <!-- DOBRA, WIEM DLACZEGO W 'CENTER TRANSFORM' MUSIMY DAWAC NA MINUSIE-->
-                    <!-- bo to przesuniecie o ktorym pisze powyzej jest W PRAWO I DO DOLU-->
-                    <!-- a my chcemy W LEWO I DO GORY-->
-
                     <Ellipse 
                         Height="{Binding Diameter}"
                             Width="{Binding Diameter}"
-                            Fill="{Binding color}">
+                            Fill="{Binding Color}">
 
                         <Ellipse.RenderTransform>
                             <TranslateTransform X="{Binding CenterTransform}" Y="{Binding CenterTransform}" />
-                            <!-- <TranslateTransform X="50" Y="50" /> -->
                         </Ellipse.RenderTransform>
 
                     </Ellipse>

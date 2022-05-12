@@ -1,23 +1,19 @@
 ﻿using Logic;
 using System.Collections.ObjectModel;
-using System.Threading;
-using System.Windows;
-
 
 namespace Model
 {
-    public abstract class ModelLayerAbstractAPI
+    public abstract class ModelAbstractApi
     {
-        public static ModelLayerAbstractAPI CreateAPI(LogicLayerAbstractAPI logicLayer = default)
+        public static ModelAbstractApi CreateAPI(BusinessLogicAbstractApi logicLayer = default)
         {
-            return new ModelLayer(logicLayer ?? LogicLayerAbstractAPI.CreateAPI());
+            return new ModelLayer(logicLayer ?? BusinessLogicAbstractApi.CreateAPI());
         }
 
-        public abstract void generateBallsRepresentative(int height, int width, int numberOfBalls, int minRadius, int maxRadius, int speed);
-        public abstract void startSimulation();
-        public abstract void stopSimulation();
-        public abstract void deleteCircles();
-        public abstract void resumeCircles();
+        public abstract void CreateCirclesForPresentation(int numberOfBalls, int minRadius, int maxRadius, int speed);
+        public abstract void StartCirclesMove();
+        public abstract void StopCirclesMove();
+        public abstract void DeleteCircles();
 
         public ObservableCollection<IMLCircle> Circles
         {
@@ -25,54 +21,46 @@ namespace Model
             set => circles = value;
         }
 
-        private ObservableCollection<IMLCircle> circles = new ObservableCollection<IMLCircle>();
+        private ObservableCollection<IMLCircle> circles = new();
 
-
-        internal class ModelLayer : ModelLayerAbstractAPI
+        internal class ModelLayer : ModelAbstractApi
         {
-            public ModelLayer(LogicLayerAbstractAPI logicLayer)
+            public ModelLayer(BusinessLogicAbstractApi logicLayer)
             {
                 MyLogicLayer = logicLayer;
             }
 
-
-            public override void generateBallsRepresentative(int height, int width, int numberOfBalls,
+            public override void CreateCirclesForPresentation(int numberOfBalls,
                 int minRadius, int maxRadius, int speed)
             {
-                MyLogicLayer.removeCircles();
-                MyLogicLayer.DestroyThreads();
-                MyLogicLayer.CreateBox(height, width, numberOfBalls, minRadius, maxRadius, speed);
+                MyLogicLayer.RemoveCircles();
+                MyLogicLayer.StopBllCircles();
+                MyLogicLayer.CreateBox(numberOfBalls, minRadius, maxRadius, speed);
                 circles.Clear();
-                foreach (IBLCircle ball in MyLogicLayer.GetBallBlls())
+                foreach (IBLCircle ball in MyLogicLayer.GetBllCircles())
                 {
                     circles.Add(new MLCircle(ball));
                 }
 
-                startSimulation();
+                StartCirclesMove();
             }
 
-            public override void startSimulation()
+            public override void StartCirclesMove()
             {
                 MyLogicLayer.StartMovingBalls();              
             }
 
-            public override void stopSimulation()
+            public override void StopCirclesMove()
             {
-                MyLogicLayer.DestroyThreads();
+                MyLogicLayer.StopBllCircles();
             }
 
-            public override void deleteCircles()
+            public override void DeleteCircles()
             {
-                MyLogicLayer.removeCircles();
+                MyLogicLayer.RemoveCircles();
             }
 
-            public override void resumeCircles()
-            {
-                MyLogicLayer.ResumeBalls();
-            }
-
-
-            private readonly LogicLayerAbstractAPI MyLogicLayer;
+            private readonly BusinessLogicAbstractApi MyLogicLayer;
         }
     }
 }

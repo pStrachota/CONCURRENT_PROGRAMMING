@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-
+using System.Runtime.CompilerServices;
 
 namespace Logic
 {
@@ -11,10 +11,8 @@ namespace Logic
         double Mass { get; }
         double VelocityX { get; set; }
         double VelocityY { get; set; }
-
         double LastUpdate { get; set; }
-
-        void RaisePropertyChanged(string propertyName = null);
+        void RaisePropertyChanged(string propertyName);
 
     }
 }

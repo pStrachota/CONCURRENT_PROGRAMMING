@@ -1,44 +1,41 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
+﻿using System.Diagnostics;
 using DATA_LAYER;
 
 namespace Logic
 {
-    public abstract class LogicLayerAbstractAPI
+    public abstract class BusinessLogicAbstractApi
     {
-        public static LogicLayerAbstractAPI CreateAPI(DataLayerAbstractApi data = default)
+
+        public const int BOX_WIDTH = 1445;
+        public const int BOX_HEIGHT = 504;
+
+        public static BusinessLogicAbstractApi CreateAPI(DataLayerAbstractApi data = default)
         {
-            return new LogicLayer(data ?? DataLayerAbstractApi.CreateLinq2Sql());
+            return new BusinessLogic(data ?? DataLayerAbstractApi.CreateLinq2DLCircles());
         }
 
-        public abstract void removeCircles();
-        public abstract List<IBLCircle> GetBallBlls();
+        public abstract void RemoveCircles();
+        public abstract List<IBLCircle> GetBllCircles();
         public abstract void UpdateBLCircle(IBLCircle circle, double time);
-        public abstract void CreateBox(int height, int width, int numberOfBalls, int minRadius, int maxRadius, int speed);
+        public abstract void CreateBox(int numberOfBalls, int minRadius, int maxRadius, int speed);
         public abstract void StartMovingBalls();
-        public abstract void DestroyThreads();
-        public abstract void ballUpdate(IBLCircle blCircle, double time);
-        public abstract void ResumeBalls();
-        private List<Task> threads = new List<Task>();
+        public abstract void StopBllCircles();
+        public abstract void BllCircleUpdate(IBLCircle blCircle, double time);
+        private List<Task> threads = new();
         private bool isMoving = false;
-        //Stopwatch stopwatch = new Stopwatch();
-        private static readonly object locker = new object();
-        private List<IBLCircle> ballBlls = new List<IBLCircle>();
+        private static readonly object locker = new();
+        private List<IBLCircle> ballBlls = new();
 
-      
-        
-        internal class LogicLayer : LogicLayerAbstractAPI
+        internal class BusinessLogic : BusinessLogicAbstractApi
         {
-            internal LogicLayer(DataLayerAbstractApi dataLayerAbstractAPI)
+            internal BusinessLogic(DataLayerAbstractApi dataLayerAbstractAPI)
             {
-                //stopwatch.Start();
                 MyDataLayer = dataLayerAbstractAPI;
             }
 
-            public override void CreateBox(int height, int width, int numberOfBalls, int minRadius, int maxRadius, int speed)
+            public override void CreateBox(int numberOfBalls, int minRadius, int maxRadius, int speed)
             {
-                List<IDLCircle> balls = MyDataLayer.GetBallsFromBox(height, width, numberOfBalls, minRadius, maxRadius, speed);
+                List<IDLCircle> balls = MyDataLayer.GetDllCirclesFromBox(numberOfBalls, minRadius, maxRadius, speed);
 
                 foreach (IDLCircle ball in balls)
                 {
@@ -48,31 +45,23 @@ namespace Logic
 
                 foreach (IBLCircle ballBll in ballBlls)
                 {
-                    Stopwatch stopwatch = new Stopwatch();
+                    Stopwatch stopwatch = new();
                     stopwatch.Start();
 
-                    Task t = new Task(() =>
-                    {                                          
+                    Task t = new(() =>
+                    {
                         while (isMoving)
                         {
-                            //to ponizej odpowiada za predkosc poruszania kulek
-                            //im mniej jest po znaku dzielenia, tym szybciej sie poruszaja
-                            ballUpdate(ballBll, stopwatch.ElapsedMilliseconds / 50);
-                            //niewiem dlaczego, ale jak sie zakomentuje ten kod ponizej
-                            //to kulki zaczynaja sie do siebie przyczepiac...
-                            //i potem juz sie nie ruszaja
-                          //  Thread.Sleep(6);
+                            BllCircleUpdate(ballBll, stopwatch.ElapsedMilliseconds / 50);
                         }
                     });
                     threads.Add(t);
                 }
             }
 
-
-
             public override void StartMovingBalls()
             {
-                if(threads.Count > 0)
+                if (threads.Count > 0)
                 {
                     if (!isMoving)
                     {
@@ -80,36 +69,17 @@ namespace Logic
                         foreach (Task t in threads)
                         {
                             t.Start();
-                            //t.Sleep(22);
                         }
                     }
                 }
-                
-
-             
             }
-            public override void ResumeBalls()
+
+            public override void StopBllCircles()
             {
-                if (!isMoving)
-                {
-                    isMoving = true;
-                }
-            }
-            
-            
-
-            public override void DestroyThreads()
-            {
-                //if (threads.Count > 0)
-                //{
-                //    isMoving = false;
-                //}
-              //  Thread.Sleep(10000);
-
-                    isMoving = false;
+                isMoving = false;
             }
 
-            public override List<IBLCircle> GetBallBlls()
+            public override List<IBLCircle> GetBllCircles()
             {
                 return ballBlls;
             }
@@ -140,46 +110,43 @@ namespace Logic
                                 phi = Math.Atan2(circle.Y - entity.Y,
                                     circle.X - entity.X);
 
-                            circle.VelocityX = (int)calculateDx(v1, v2, circle.Mass, entity.Mass, theta1, theta2, phi);
-                            circle.VelocityY = (int)calculateDy(v1, v2, circle.Mass, entity.Mass, theta1, theta2, phi);
-                            entity.VelocityX = (int)calculateDx(v2, v1, entity.Mass, circle.Mass, theta2, theta1, phi);
-                            entity.VelocityY = (int)calculateDy(v2, v1, entity.Mass, circle.Mass, theta2, theta1, phi);
+                            circle.VelocityX = (int)CalculateDx(v1, v2, circle.Mass, entity.Mass, theta1, theta2, phi);
+                            circle.VelocityY = (int)CalculateDy(v1, v2, circle.Mass, entity.Mass, theta1, theta2, phi);
+                            entity.VelocityX = (int)CalculateDx(v2, v1, entity.Mass, circle.Mass, theta2, theta1, phi);
+                            entity.VelocityY = (int)CalculateDy(v2, v1, entity.Mass, circle.Mass, theta2, theta1, phi);
                         }
                     });
                 }
-
-                //_lastUpdate = stopwatch.ElapsedMilliseconds / 50;
-
             }
 
-            double calculateDx(double v1, double v2, double m1, double m2, double theta1,
+            double CalculateDx(double v1, double v2, double m1, double m2, double theta1,
                   double theta2, double phi)
             {
                 return (v1 * Math.Cos(theta1 - phi) * (m1 - m2) + 2 * m2 * v2 * Math.Cos(theta2 - phi))
                     / (m1 + m2) * Math.Cos(phi) + v1 * Math.Sin(theta1 - phi) * Math.Cos(phi + Math.PI / 2);
             }
 
-            double calculateDy(double v1, double v2, double m1, double m2, double theta1,
+            double CalculateDy(double v1, double v2, double m1, double m2, double theta1,
                 double theta2, double phi)
             {
                 return (v1 * Math.Cos(theta1 - phi) * (m1 - m2) + 2 * m2 * v2 * Math.Cos(theta2 - phi))
                     / (m1 + m2) * Math.Sin(phi) + v1 * Math.Sin(theta1 - phi) * Math.Sin(phi + Math.PI / 2);
             }
 
-            public override void removeCircles()
+            public override void RemoveCircles()
             {
                 threads.Clear();
                 ballBlls.Clear();
             }
 
-            public override void ballUpdate(IBLCircle blCircle, double time)
+            public override void BllCircleUpdate(IBLCircle blCircle, double time)
             {
                 double timeElapsed = time - blCircle.LastUpdate;
 
                 int newLocationX = (int)(blCircle.X + blCircle.VelocityX * timeElapsed);
                 int newLocationY = (int)(blCircle.Y + blCircle.VelocityY * timeElapsed);
 
-                if (newLocationX - blCircle.R > 0 && newLocationX + blCircle.R < 1445)
+                if (newLocationX - blCircle.R > 0 && newLocationX + blCircle.R < BOX_WIDTH)
                 {
                     blCircle.X = newLocationX;
                 }
@@ -188,7 +155,7 @@ namespace Logic
                     blCircle.VelocityX = -blCircle.VelocityX;
                 }
 
-                if (newLocationY - blCircle.R > 0 && newLocationY + blCircle.R < 504)
+                if (newLocationY - blCircle.R > 0 && newLocationY + blCircle.R < BOX_HEIGHT)
                 {
                     blCircle.Y = newLocationY;
                 }
@@ -197,19 +164,13 @@ namespace Logic
                     blCircle.VelocityY = -blCircle.VelocityY;
                 }
 
-                lock (locker)
-                {
-                    UpdateBLCircle(blCircle, time);
-                }
+                UpdateBLCircle(blCircle, time);
 
                 blCircle.LastUpdate = time;
             }
 
             private readonly DataLayerAbstractApi MyDataLayer;
-            private double _lastUpdate = 0;
         }
     }
-
-
 
 }

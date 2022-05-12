@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Model
 {
@@ -9,8 +10,8 @@ namespace Model
         int Radius { get; }
         int Diameter { get; }
         int CenterTransform { get; }
-        string color { get; }
+        string Color { get; }
 
-        void RaisePropertyChanged(string propertyName = null);
+        void RaisePropertyChanged(string propertyName);
     }
 }

@@ -13,7 +13,7 @@ namespace DATA_LOGIC_TESTS
         [TestInitialize]
         public void Initialize()
         {
-            _dataLayerAbstractApi = DataLayerAbstractApi.CreateLinq2Sql();
+            _dataLayerAbstractApi = DataLayerAbstractApi.CreateLinq2DLCircles();
         }
 
         [TestMethod]
@@ -26,13 +26,13 @@ namespace DATA_LOGIC_TESTS
         [TestMethod]
         public void CheckIf_DllCirclesIsNotNull_AfterInitialization()
         {
-            Assert.IsNotNull(_dataLayerAbstractApi.GetBallsFromBox(504, 1445, 2, 20, 50, 20));
+            Assert.IsNotNull(_dataLayerAbstractApi.GetDllCirclesFromBox(2, 20, 50, 20));
         }
 
         [TestMethod]
         public void CheckIf_SeparateBallsFromBox_AreNotEqual()
         {
-            var balls = _dataLayerAbstractApi.GetBallsFromBox(504, 1445, 2, 20, 50, 20);
+            var balls = _dataLayerAbstractApi.GetDllCirclesFromBox(2, 20, 50, 20);
             var ball = balls.ElementAt(0);
             var AnotherBall = balls.ElementAt(1);
 

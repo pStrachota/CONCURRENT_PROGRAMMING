@@ -7,7 +7,7 @@ namespace PRESENTATION_TESTS
     [TestClass]
     public class PresentationLayerTests
     {
-        CircleViewModel _circleViewModel;
+        ViewModel.ViewModel _circleViewModel;
 
         [TestInitialize]
         public void Initialize()

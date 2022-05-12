@@ -4,17 +4,17 @@ namespace DATA_LAYER;
 
 public abstract class DataLayerAbstractApi
 {
-    public abstract List<IDLCircle> GetBallsFromBox(int height, int width, int numberOfBalls, int minRadius, int maxRadius, int speed);
-    public static DataLayerAbstractApi? CreateLinq2Sql()
+    public abstract List<IDLCircle> GetDllCirclesFromBox(int numberOfBalls, int minRadius, int maxRadius, int speed);
+    public static DataLayerAbstractApi? CreateLinq2DLCircles()
     {
-        return new Linq2Balls();
+        return new Linq2DLCircles();
     }
 
-    private class Linq2Balls : DataLayerAbstractApi
+    private class Linq2DLCircles : DataLayerAbstractApi
     {
-        public override List<IDLCircle> GetBallsFromBox(int height, int width, int numberOfBalls, int minRadius, int maxRadius, int speed)
+        public override List<IDLCircle> GetDllCirclesFromBox(int numberOfBalls, int minRadius, int maxRadius, int speed)
         {
-            return new Box(height, width, numberOfBalls, minRadius, maxRadius, speed).GetBalls();
+            return new Box(numberOfBalls, minRadius, maxRadius, speed).GetDllCircles();
         }
     }
 }
