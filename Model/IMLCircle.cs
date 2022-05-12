@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Presentation.Model
+namespace Model
 {
     public interface IMLCircle : INotifyPropertyChanged
     {

@@ -5,11 +5,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace Presentation.Model
+namespace Model
 {
     public class MLCircle : IMLCircle
     {
-        
+
         private readonly List<string?> _colorList = new List<string?>()
         {
             "Black",
@@ -24,10 +24,10 @@ namespace Presentation.Model
             "Pink",
             "Gray"
         };
-        
+
         public MLCircle(IBLCircle ball)
         {
-            
+
             /*
              * lepsze wyjasnienie:
              * 1) w klasie ball mamy property dla X i Y polozenia
@@ -42,20 +42,20 @@ namespace Presentation.Model
              * 5) !!!! KLASA CIRCLE PRZERZUCA TE INFORMACJE DALEJ!
              * takim samym sposobem, jak opisany powyzej
              */
-            
+
             ball.PropertyChanged += BallPropertyChanged;
             X_Center = ball.X;
             Y_Center = ball.Y;
             Radius = ball.R;
             this.color = _colorList.ElementAt(new Random().Next(0, 8));
         }
-        
-      
+
+
 
         private int x_center;
         private int y_center;
         private int radius;
-             
+
         public int Radius
         {
             get => radius;

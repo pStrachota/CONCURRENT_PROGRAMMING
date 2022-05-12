@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.Input;
 using GalaSoft.MvvmLight;
-using Presentation.Model;
+using Model;
 
 namespace ViewModel
 {

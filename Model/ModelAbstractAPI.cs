@@ -4,7 +4,7 @@ using System.Threading;
 using System.Windows;
 
 
-namespace Presentation.Model
+namespace Model
 {
     public abstract class ModelLayerAbstractAPI
     {
