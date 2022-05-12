@@ -36,5 +36,12 @@ namespace PRESENTATION_TESTS
 
         }
 
+        [TestMethod]
+        public void CheckIf_CannotRemoveCircles_WhenCirclesListCountIsEmpty()
+        {
+            Assert.IsFalse(_circleViewModel.CanDeleteCommand());
+
+        }
+
     }
 }

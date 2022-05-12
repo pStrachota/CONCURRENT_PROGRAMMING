@@ -13,7 +13,7 @@ namespace ViewModel
             MyModel = ModelAbstractApi.CreateAPI();
             StartCommand = new RelayCommand(() => Start(), CanMoveCirclesCommand);
             StopCommand = new RelayCommand(() => Stop());
-            DeleteCommand = new RelayCommand((() => Delete()));
+            DeleteCommand = new RelayCommand((() => Delete()), CanDeleteCommand);
         }
 
         private ModelAbstractApi MyModel { get; set; }
@@ -30,6 +30,11 @@ namespace ViewModel
                    new Regex(pattern).IsMatch(_circleSpeed) && new Regex(pattern).IsMatch(_circleRadiusMax) &&
                    int.Parse(_circleRadiusMin) < int.Parse(_circleRadiusMax) && int.Parse(_circleRadiusMin) < 240 &&
                    int.Parse(_circleRadiusMax) < 250;
+        }
+
+        public bool CanDeleteCommand()
+        {
+            return MyModel.Circles.Count > 0;
         }
 
         public string CircleSpeed
@@ -88,6 +93,7 @@ namespace ViewModel
         {
             MyModel.CreateCirclesForPresentation(int.Parse(_numberOfBalls), int.Parse(_circleRadiusMin), int.Parse(_circleRadiusMax),
                 int.Parse(_circleSpeed));
+            DeleteCommand.NotifyCanExecuteChanged();
         }
 
         public void Stop()
