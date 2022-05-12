@@ -21,7 +21,7 @@ namespace Logic
         public abstract void StartMovingBalls();
         public abstract void StopBllCircles();
         public abstract void BllCircleUpdate(IBLCircle blCircle, double time);
-        private List<Task> threads = new();
+        private List<Thread> threads = new();
         private bool isMoving = false;
         private static readonly object locker = new();
         private List<IBLCircle> ballBlls = new();
@@ -48,7 +48,7 @@ namespace Logic
                     Stopwatch stopwatch = new();
                     stopwatch.Start();
 
-                    Task t = new(() =>
+                    Thread t = new(() =>
                     {
                         while (isMoving)
                         {
@@ -66,7 +66,7 @@ namespace Logic
                     if (!isMoving)
                     {
                         isMoving = true;
-                        foreach (Task t in threads)
+                        foreach (Thread t in threads)
                         {
                             t.Start();
                         }
