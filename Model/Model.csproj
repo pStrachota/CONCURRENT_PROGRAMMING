@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BUSINESS_LOGIC_LAYER\BUSINESS_LOGIC_LAYER.csproj" />
+  </ItemGroup>
+
 </Project>
