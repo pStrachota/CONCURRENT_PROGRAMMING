@@ -4,22 +4,20 @@ namespace DATA_LAYER
     internal class Box
     {
         private readonly List<IDLCircle> _dllCircles = new();
-        public const int BOX_WIDTH = 1445;
-        public const int BOX_HEIGHT = 504;
 
-        internal Box(int numberOfBalls, int minRadius, int maxRadius, int speed)
+        internal Box(int boxWidth, int boxHeight, int numberOfBalls, int minRadius, int maxRadius, int speed)
         {        
-            GenerateDllCircles(numberOfBalls, minRadius, maxRadius, speed);
+            GenerateDllCircles(boxWidth, boxHeight, numberOfBalls, minRadius, maxRadius, speed);
         }
     
-        internal void GenerateDllCircles(int number, int minRadius, int maxRadius, int speed)
+        internal void GenerateDllCircles(int boxWidth, int boxHeight, int number, int minRadius, int maxRadius, int speed)
         {
             Random r = new();
 
             for (int i = 0; i < number; i++)
             {
-                int x = r.Next(minRadius, BOX_WIDTH - maxRadius);
-                int y = r.Next(minRadius, BOX_HEIGHT - maxRadius);
+                int x = r.Next(minRadius, boxWidth - maxRadius);
+                int y = r.Next(minRadius, boxHeight - maxRadius);
                 _dllCircles.Add(new DLCircle(x, y, minRadius, maxRadius, speed));
             }
         }   

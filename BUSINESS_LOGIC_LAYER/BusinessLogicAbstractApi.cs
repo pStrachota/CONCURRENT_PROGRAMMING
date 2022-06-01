@@ -6,9 +6,6 @@ namespace Logic
     public abstract class BusinessLogicAbstractApi
     {
 
-        public const int BOX_WIDTH = 1445;
-        public const int BOX_HEIGHT = 504;
-
         public static BusinessLogicAbstractApi CreateAPI(DataLayerAbstractApi data = default)
         {
             return new BusinessLogic(data ?? DataLayerAbstractApi.CreateLinq2DLCircles());
@@ -30,12 +27,12 @@ namespace Logic
         {
             internal BusinessLogic(DataLayerAbstractApi dataLayerAbstractAPI)
             {
-                MyDataLayer = dataLayerAbstractAPI;
+                _dataLayerAbstractApi = dataLayerAbstractAPI;
             }
 
             public override void CreateBox(int numberOfBalls, int minRadius, int maxRadius, int speed)
             {
-                List<IDLCircle> balls = MyDataLayer.GetDllCirclesFromBox(numberOfBalls, minRadius, maxRadius, speed);
+                List<IDLCircle> balls = _dataLayerAbstractApi.GetDllCirclesFromBox(numberOfBalls, minRadius, maxRadius, speed);
 
                 foreach (IDLCircle ball in balls)
                 {
@@ -146,7 +143,7 @@ namespace Logic
                 int newLocationX = (int)(blCircle.X + blCircle.VelocityX * timeElapsed);
                 int newLocationY = (int)(blCircle.Y + blCircle.VelocityY * timeElapsed);
 
-                if (newLocationX - blCircle.R > 0 && newLocationX + blCircle.R < BOX_WIDTH)
+                if (newLocationX - blCircle.R > 0 && newLocationX + blCircle.R < _dataLayerAbstractApi.BOX_WIDTH)
                 {
                     blCircle.X = newLocationX;
                 }
@@ -155,7 +152,7 @@ namespace Logic
                     blCircle.VelocityX = -blCircle.VelocityX;
                 }
 
-                if (newLocationY - blCircle.R > 0 && newLocationY + blCircle.R < BOX_HEIGHT)
+                if (newLocationY - blCircle.R > 0 && newLocationY + blCircle.R < _dataLayerAbstractApi.BOX_HEIGHT)
                 {
                     blCircle.Y = newLocationY;
                 }
@@ -169,7 +166,7 @@ namespace Logic
                 blCircle.LastUpdate = time;
             }
 
-            private readonly DataLayerAbstractApi MyDataLayer;
+            private readonly DataLayerAbstractApi _dataLayerAbstractApi;
         }
     }
 
