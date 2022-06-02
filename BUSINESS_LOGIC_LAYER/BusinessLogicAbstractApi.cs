@@ -13,7 +13,7 @@ namespace Logic
 
         public abstract void RemoveCircles();
         public abstract List<IBLCircle> GetBllCircles();
-        public abstract void UpdateBLCircle(IBLCircle circle, double time);
+        public abstract void CheckIfBllCirclesCollides(IBLCircle circle, double time);
         public abstract void CreateBox(int numberOfBalls, int minRadius, int maxRadius, int speed);
         public abstract void StartMovingBalls();
         public abstract void StopBllCircles();
@@ -90,7 +90,7 @@ namespace Logic
                 return ballBlls;
             }
 
-            public override void UpdateBLCircle(IBLCircle circle, double time)
+            public override void CheckIfBllCirclesCollides(IBLCircle circle, double time)
             {
                 lock (locker)
                 {
@@ -189,7 +189,7 @@ namespace Logic
                     _dataLayerAbstractApi.GetLogger().Information("{@blCircle} hit the wall", blCircle);
                 }
 
-                UpdateBLCircle(blCircle, time);
+                CheckIfBllCirclesCollides(blCircle, time);
 
                 blCircle.LastUpdate = time;
             }
