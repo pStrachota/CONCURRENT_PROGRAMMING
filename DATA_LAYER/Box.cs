@@ -18,7 +18,7 @@ namespace DATA_LAYER
             {
                 int x = r.Next(minRadius, boxWidth - maxRadius);
                 int y = r.Next(minRadius, boxHeight - maxRadius);
-                _dllCircles.Add(new DLCircle(x, y, minRadius, maxRadius, speed));
+                _dllCircles.Add(new DLCircle("Circle_" + i, x, y, minRadius, maxRadius, speed));
             }
         }   
         internal List<IDLCircle> GetDllCircles()

@@ -10,7 +10,7 @@ namespace Logic
         {
             Random r = new();
             double angle = 2 * Math.PI * r.NextDouble();
-
+            _name = iball.Name;
             _x = iball.X;
             _y = iball.Y;
             _velocityX = iball.Speed * Math.Cos(angle);
@@ -19,6 +19,7 @@ namespace Logic
             _mass = Math.PI * Math.Pow(_r, 2);
         }
 
+        private string _name;
         private int _x;
         private int _y;
         private int _r;
@@ -39,6 +40,12 @@ namespace Logic
         public double Mass
         {
             get => _mass;
+        }
+
+        public string Name
+        {
+            get => _name;
+            set => _name = value;
         }
 
         public double VelocityX

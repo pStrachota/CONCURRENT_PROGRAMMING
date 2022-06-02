@@ -13,8 +13,9 @@ namespace DATA_LAYER
 {
     internal class DLCircle : IDLCircle
     {
-        internal DLCircle(int x, int y, int minRadius, int maxRadius, int speed)
+        internal DLCircle(string name, int x, int y, int minRadius, int maxRadius, int speed)
         {
+            _name = name;
             _x = x;
             _y = y;
             _r = new Random().Next(minRadius, maxRadius);
@@ -24,6 +25,13 @@ namespace DATA_LAYER
         private int _y;
         private int _r;
         private int _speed;
+        private string _name;
+
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
 
         public int X
         {
