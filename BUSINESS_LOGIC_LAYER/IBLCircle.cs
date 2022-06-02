@@ -12,6 +12,7 @@ namespace Logic
         double VelocityX { get; set; }
         double VelocityY { get; set; }
         double LastUpdate { get; set; }
+        string Name { get; set; }
         void RaisePropertyChanged(string propertyName);
 
     }

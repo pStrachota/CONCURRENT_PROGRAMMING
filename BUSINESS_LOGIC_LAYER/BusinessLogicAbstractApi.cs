@@ -6,9 +6,6 @@ namespace Logic
     public abstract class BusinessLogicAbstractApi
     {
 
-        public const int BOX_WIDTH = 1445;
-        public const int BOX_HEIGHT = 504;
-
         public static BusinessLogicAbstractApi CreateAPI(DataLayerAbstractApi data = default)
         {
             return new BusinessLogic(data ?? DataLayerAbstractApi.CreateLinq2DLCircles());
@@ -16,7 +13,7 @@ namespace Logic
 
         public abstract void RemoveCircles();
         public abstract List<IBLCircle> GetBllCircles();
-        public abstract void UpdateBLCircle(IBLCircle circle, double time);
+        public abstract void CheckIfBllCirclesCollides(IBLCircle circle, double time);
         public abstract void CreateBox(int numberOfBalls, int minRadius, int maxRadius, int speed);
         public abstract void StartMovingBalls();
         public abstract void StopBllCircles();
@@ -30,17 +27,23 @@ namespace Logic
         {
             internal BusinessLogic(DataLayerAbstractApi dataLayerAbstractAPI)
             {
-                MyDataLayer = dataLayerAbstractAPI;
+                _dataLayerAbstractApi = dataLayerAbstractAPI;
             }
 
             public override void CreateBox(int numberOfBalls, int minRadius, int maxRadius, int speed)
             {
-                List<IDLCircle> balls = MyDataLayer.GetDllCirclesFromBox(numberOfBalls, minRadius, maxRadius, speed);
+                _dataLayerAbstractApi.GetLogger().Information("Creating box with {numberOfBalls} balls, " +
+                   "{minRadius} min radius, {maxRadius} max radius, {speed} speed", numberOfBalls, minRadius, maxRadius, speed);
+
+                List<IDLCircle> balls = _dataLayerAbstractApi.GetDllCirclesFromBox(numberOfBalls, minRadius, maxRadius, speed);
 
                 foreach (IDLCircle ball in balls)
                 {
                     IBLCircle ballBll = new BLCircle(ball);
                     ballBlls.Add(ballBll);
+
+                    _dataLayerAbstractApi.GetLogger().Information("Created new IBLCircle: {@ballBll}", ballBll);
+
                 }
 
                 foreach (IBLCircle ballBll in ballBlls)
@@ -61,6 +64,8 @@ namespace Logic
 
             public override void StartMovingBalls()
             {
+                _dataLayerAbstractApi.GetLogger().Information("Starting moving IBLCircles");
+
                 if (threads.Count > 0)
                 {
                     if (!isMoving)
@@ -77,6 +82,7 @@ namespace Logic
             public override void StopBllCircles()
             {
                 isMoving = false;
+                _dataLayerAbstractApi.GetLogger().Information("Stopping moving IBLCircles");
             }
 
             public override List<IBLCircle> GetBllCircles()
@@ -84,7 +90,7 @@ namespace Logic
                 return ballBlls;
             }
 
-            public override void UpdateBLCircle(IBLCircle circle, double time)
+            public override void CheckIfBllCirclesCollides(IBLCircle circle, double time)
             {
                 lock (locker)
                 {
@@ -102,6 +108,9 @@ namespace Logic
 
                         if (distance <= circle.R + entity.R && nextDistance < distance)
                         {
+                            _dataLayerAbstractApi.GetLogger().Information("Collision between {@circle} " +
+                               "and {@entity}", circle, entity);
+
                             var v1 = Math.Sqrt((circle.VelocityX * circle.VelocityX) + (circle.VelocityY * circle.VelocityY));
                             var v2 = Math.Sqrt((entity.VelocityX * entity.VelocityX) + (entity.VelocityY * entity.VelocityY));
 
@@ -137,6 +146,8 @@ namespace Logic
             {
                 threads.Clear();
                 ballBlls.Clear();
+
+                _dataLayerAbstractApi.GetLogger().Information("Box cleared");
             }
 
             public override void BllCircleUpdate(IBLCircle blCircle, double time)
@@ -146,30 +157,44 @@ namespace Logic
                 int newLocationX = (int)(blCircle.X + blCircle.VelocityX * timeElapsed);
                 int newLocationY = (int)(blCircle.Y + blCircle.VelocityY * timeElapsed);
 
-                if (newLocationX - blCircle.R > 0 && newLocationX + blCircle.R < BOX_WIDTH)
+                if (newLocationX != blCircle.X)
+                {
+                    _dataLayerAbstractApi.GetLogger().Information($"{blCircle.Name} moved X " +
+                        $"from {blCircle.X} to {newLocationX}");
+                }
+
+                if (newLocationY != blCircle.Y)
+                {
+                    _dataLayerAbstractApi.GetLogger().Information($"{blCircle.Name} moved Y " +
+                        $"from {blCircle.Y} to {newLocationY}");
+                }
+
+                if (newLocationX - blCircle.R > 0 && newLocationX + blCircle.R < _dataLayerAbstractApi.BOX_WIDTH)
                 {
                     blCircle.X = newLocationX;
                 }
                 else
                 {
                     blCircle.VelocityX = -blCircle.VelocityX;
+                    _dataLayerAbstractApi.GetLogger().Information("{@blCircle} hit the wall", blCircle);
                 }
 
-                if (newLocationY - blCircle.R > 0 && newLocationY + blCircle.R < BOX_HEIGHT)
+                if (newLocationY - blCircle.R > 0 && newLocationY + blCircle.R < _dataLayerAbstractApi.BOX_HEIGHT)
                 {
                     blCircle.Y = newLocationY;
                 }
                 else
                 {
                     blCircle.VelocityY = -blCircle.VelocityY;
+                    _dataLayerAbstractApi.GetLogger().Information("{@blCircle} hit the wall", blCircle);
                 }
 
-                UpdateBLCircle(blCircle, time);
+                CheckIfBllCirclesCollides(blCircle, time);
 
                 blCircle.LastUpdate = time;
             }
 
-            private readonly DataLayerAbstractApi MyDataLayer;
+            private readonly DataLayerAbstractApi _dataLayerAbstractApi;
         }
     }
 

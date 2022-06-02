@@ -1,12 +1,12 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.Input;
-using GalaSoft.MvvmLight;
 using Model;
 
 namespace ViewModel
 {
-    public class ViewModel : ViewModelBase
+    public class ViewModel : INotifyPropertyChanged
     {
         public ViewModel()
         {
@@ -44,10 +44,10 @@ namespace ViewModel
             {
                 _circleSpeed = value;
                 StartCommand.NotifyCanExecuteChanged();
-                RaisePropertyChanged();
+                RaisePropertyChanged(nameof(CircleSpeed));
             }
         }
- 
+
         public ObservableCollection<IMLCircle> Circles
         {
             get => MyModel.Circles;
@@ -61,7 +61,7 @@ namespace ViewModel
             {
                 _circleRadiusMin = value;
                 StartCommand.NotifyCanExecuteChanged();
-                RaisePropertyChanged();
+                RaisePropertyChanged(nameof(CircleRadiusMin));
             }
         }
 
@@ -72,7 +72,7 @@ namespace ViewModel
             {
                 _circleRadiusMax = value;
                 StartCommand.NotifyCanExecuteChanged();
-                RaisePropertyChanged();
+                RaisePropertyChanged(nameof(CircleRadiusMax));
             }
         }
         public string NumberOfBalls
@@ -82,7 +82,7 @@ namespace ViewModel
             {
                 _numberOfBalls = value;
                 StartCommand.NotifyCanExecuteChanged();
-                RaisePropertyChanged();
+                RaisePropertyChanged(nameof(NumberOfBalls));
             }
         }
         public RelayCommand StartCommand { get; set; }
@@ -104,6 +104,13 @@ namespace ViewModel
         public void Delete()
         {
             MyModel.Circles.Clear();
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public void RaisePropertyChanged(string propertyName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

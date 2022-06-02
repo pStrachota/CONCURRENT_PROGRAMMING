@@ -9,6 +9,7 @@ namespace DATA_LAYER
         int Y { get; }
         int R { get; }
         int Speed { get; }
+        string Name { get; }
         void RaisePropertyChanged(string propertyName);
 
     }
