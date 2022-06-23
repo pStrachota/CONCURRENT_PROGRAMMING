@@ -26,9 +26,6 @@ CSHARP_PW_PROJECT
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
-
-
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -47,14 +44,10 @@ CSHARP_PW_PROJECT
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#about-the-project">About the project</a></li>
+    <li><a href="#built-with">Built With</a></li>
+    <li><a href="#technological-construction-used">Technological construction used</a></li>
+    <li><a href="#some-screens-from-project">Some screens from project</a></li>
     <li><a href="#license">License</a></li>
   </ol>
 </details>
@@ -63,46 +56,53 @@ CSHARP_PW_PROJECT
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+This project was made for one of classess in 4th semester in TUL.
+Main purpose of this task was to introduce us with topics related to 
+concurrency and real time programming. Our tutors chose C# for this project,
+mostly becouse of strong and detailed documentation and flaweless integration 
+with Windows.
 
-![screen](https://user-images.githubusercontent.com/81098347/164800223-53afef92-e705-4189-968b-e0b658328071.png)
-<br />
-<br />
-![screen2](https://user-images.githubusercontent.com/81098347/164800774-96f89359-f029-4cbd-939d-220c2dba38a7.png)
+We had to make three separate task, but all of them was connected to each other.
+All project can be summarized as *given fixed width and height, create circle balls
+that will be bouncing off each other and boudaries*.
+It may seem simple yet using this model we learnt topis such as thread, WPF, logging.
+
+Project shedule:
+1) interactive / reactive programming
+2) asynchonous programming / critical section
+3) real-time programming / logging
 
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+## Some screens from project
+![screen](https://i.imgur.com/5CESn5q.png)
+<br />
+<br />
+![screen2](https://i.imgur.com/Wb5vlb1.png)
+<br />
+<br />
+![screen3](https://i.imgur.com/i9MRBNb.png)
+ 
 
+## Technological construction used
+* Lock (critical section)
+* Thread
+* MVVM Community Toolkit (Commands)
+* Serilog (including logging to database)
 
-### Built With
+## Built With
 
 * [C#](https://docs.microsoft.com/en-us/dotnet/csharp/)
 * [WPF](https://docs.microsoft.com/pl-pl/dotnet/desktop/wpf/?view=netdesktop-6.0)
+* MVVM
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
 
-<!-- USAGE EXAMPLES -->
-## Usage
-Educational purposes
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [x] Implement MVVM
-- [x] Implement 3 tier architecture
-- [ ] the balls objects can bounce off each other
-
-
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 
 
@@ -115,18 +115,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 
 
-<!-- CONTACT -->
-## Contact
 
-Project Link: [https://github.com/pStrachota/CONCURRENT_PROGRAMMING_PROJECT](https://github.com/pStrachota/CONCURRENT_PROGRAMMING_PROJECT)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-
-
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 
 
